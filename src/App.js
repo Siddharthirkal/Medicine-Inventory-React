@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import MedicineForm from './components/MediniceForm';
+import MedicineList from './components/MediniceList';
+import Cart from './components/cart';
 
-function App() {
+const App = () => {
+  const [medicines, setMedicines] = useState([]);
+  const [cart, setCart] = useState([]);
+
+  const handleAddMedicine = (medicine) => {
+    setMedicines([...medicines, medicine]);
+  };
+
+  const handleAddToCart = (index) => {
+    const updatedMedicines = [...medicines];
+    const updatedCart = [...cart];
+    const selectedMedicine = updatedMedicines[index];
+
+    if (selectedMedicine.quantity > 0) {
+      selectedMedicine.quantity -= 1;
+      updatedCart.push(selectedMedicine);
+    }
+
+    setMedicines(updatedMedicines);
+    setCart(updatedCart);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <MedicineForm onAddMedicine={handleAddMedicine} />
+      <MedicineList medicines={medicines} onAddToCart={handleAddToCart} />
+      <Cart cart={cart} />
     </div>
   );
-}
+};
 
 export default App;
